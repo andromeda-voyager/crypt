@@ -30,25 +30,25 @@ func check(e error) {
 
 func getCommand() []string {
 	commandScanner := bufio.NewScanner(os.Stdin)
-	fmt.Print("PasswordCrypt: ")
+	fmt.Print(": ")
 	commandScanner.Scan()
 	command := commandScanner.Text()
 	return strings.Split(command, " ")
 }
 
 func printStartingCommands() {
-	fmt.Println("\n\tcreate CRYPT",
+	fmt.Println("\n\tcreate \033[4mCRYPT_NAME\033[0m",
 		"\n\t\t create a new crypt",
-		"\n\topen CRYPT",
-		"\n\t\topen a crypt file")
+		"\n\n\topen \033[4mCRYPT_NAME\033[0m",
+		"\n\t\topen a crypt")
 }
 
 func printCommands() {
 
 	fmt.Println("\n\tshow [ACCOUNT]\n",
-		"\n\tnew ACCOUNT CATEGORY\n",
-		"\n\tdelete ACCOUNT\n",
-		"\n\tmove ACCOUNT DESTINATION\n",
+		"\n\tnew \033[4mACCOUNT\033[0m \033[4mCATEGORY\033[0m\n",
+		"\n\tdelete \033[4mACCOUNT\033[0m\n",
+		"\n\tmove \033[4mACCOUNT\033[0m \033[4mDESTINATION\033[0m\n",
 		"\n\tclose")
 }
 
@@ -158,10 +158,8 @@ func processCryptCommands(c *crypt) {
 }
 
 func main() {
-	//fmt.Println(createPassword(20))
 
 	fmt.Println("\t-  PasswordCrypt Password Manager  -", "\n\nEnter 'help' for a list of commands.")
-
 	processCommands()
 
 }

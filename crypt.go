@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 )
 
 const defaultPasswordLength = 20
@@ -64,7 +65,7 @@ func (c *crypt) closeCrypt() {
 	encodedCrypt := buffer.Bytes()
 
 	encryptedData, err := encrypt(c.password, encodedCrypt)
-	err = ioutil.WriteFile(c.Name, encryptedData, 0644)
+	err = ioutil.WriteFile(path.Join("./crypts/", c.Name), encryptedData, 0644)
 	check(err)
 
 	fmt.Println("Crypt Saved.")
@@ -74,12 +75,16 @@ func (c *crypt) closeCrypt() {
 
 func openCrypt(fileName string) {
 	password := getPass()
-	encryptedFileData, err := ioutil.ReadFile(fileName)
+	encryptedFileData, err := ioutil.ReadFile(path.Join("./crypts/", fileName))
 	if err != nil {
-		log.Fatal("Unable to open ", fileName)
+		fmt.Println("Unable to open", fileName)
+		return
 	}
 	decryptedData, err := decrypt(password, encryptedFileData)
-	check(err)
+	if err != nil {
+		fmt.Println("Failed to open crypt. Wrong password.")
+		return
+	}
 
 	reader := bytes.NewReader(decryptedData)
 	decoder := gob.NewDecoder(reader)
@@ -158,32 +163,32 @@ func (c *crypt) addAccount(newAccount account, categoryName string) {
 	}
 }
 
-func (c *crypt) copy(command []string) {
-	switch command[1] {
-	case "-p":
-		c.copyPassword(command[2])
-	case "-u":
-		c.copyUsername(command[2])
-	}
-}
+// func (c *crypt) copy(command []string) {
+// 	switch command[1] {
+// 	case "-p":
+// 		c.copyPassword(command[2])
+// 	case "-u":
+// 		c.copyUsername(command[2])
+// 	}
+// }
 
-func (c *crypt) copyPassword(accountName string) {
-	catIndex, accIndex, accountFound := c.findAccount(accountName)
-	if accountFound {
-		writeToClipboard(string(c.Categories[catIndex].Accounts[accIndex].Password))
-	} else {
-		fmt.Println(accountName, " not found.")
-	}
-}
+// func (c *crypt) copyPassword(accountName string) {
+// 	catIndex, accIndex, accountFound := c.findAccount(accountName)
+// 	if accountFound {
+// 		writeToClipboard(string(c.Categories[catIndex].Accounts[accIndex].Password))
+// 	} else {
+// 		fmt.Println(accountName, " not found.")
+// 	}
+// }
 
-func (c *crypt) copyUsername(accountName string) {
-	catIndex, accIndex, accountFound := c.findAccount(accountName)
-	if accountFound {
-		writeToClipboard(c.Categories[catIndex].Accounts[accIndex].Username)
-	} else {
-		fmt.Println(accountName, " not found.")
-	}
-}
+// func (c *crypt) copyUsername(accountName string) {
+// 	catIndex, accIndex, accountFound := c.findAccount(accountName)
+// 	if accountFound {
+// 		writeToClipboard(c.Categories[catIndex].Accounts[accIndex].Username)
+// 	} else {
+// 		fmt.Println(accountName, " not found.")
+// 	}
+// }
 
 func (c *crypt) changePassword(accountName string, passwordLength int) {
 	catIndex, accIndex, accountFound := c.findAccount(accountName)

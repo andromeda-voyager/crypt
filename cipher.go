@@ -9,15 +9,15 @@ import (
 
 const (
 	nonceSize = 12
-	saltSize  = 44
+	saltSize  = 32
+	keySize   = 32
 )
 
 func newCipher(password, salt []byte) (cipher.AEAD, error) {
 
-	kdf := argon2.IDKey(password, salt, 4, 32*1024, 4, 44)
+	kdf := argon2.IDKey(password, salt, 4, 32*1024, 4, keySize)
 
 	block, err := aes.NewCipher(kdf[:32])
-	//fmt.Println(kdf)
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +44,8 @@ func decrypt(password, ciphertext []byte) ([]byte, error) {
 }
 
 func encrypt(password, plaintext []byte) ([]byte, error) {
-	nonce, err := generateRandomBytes(12)
-	salt, err := generateRandomBytes(44)
+	nonce, err := generateRandomBytes(nonceSize)
+	salt, err := generateRandomBytes(saltSize)
 	cipher, err := newCipher(password, salt)
 	if err != nil {
 		return nil, err
