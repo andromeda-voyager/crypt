@@ -123,7 +123,6 @@ func (c *crypt) deleteAccount(accountName string) {
 	} else {
 		fmt.Println("Unable to delete ", accountName, ". Account not found.")
 	}
-
 }
 
 func (c *crypt) deleteCategory(catIndex int) {
