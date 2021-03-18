@@ -31,6 +31,7 @@ func printCommands() {
 		"\n\tnew \033[4mACCOUNT\033[0m \033[4mCATEGORY\033[0m\n",
 		"\n\tdelete \033[4mACCOUNT\033[0m\n",
 		"\n\tmove \033[4mACCOUNT\033[0m \033[4mDESTINATION\033[0m\n",
+		"\n\tnewpass",
 		"\n\tclose")
 }
 
@@ -111,7 +112,7 @@ func processCryptCommands(c *crypt) {
 			} else {
 				fmt.Println("No account specified for deletion.")
 			}
-		case "cp":
+		case "newpass":
 			passwordLength := 0
 			if len(command) < 2 {
 				fmt.Println("Command arguments not valid.")
